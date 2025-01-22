@@ -14,9 +14,19 @@ import { PackageIcon, TrolleyIcon } from "@sanity/icons";
 
 function Header() {
   const { user } = useUser();
+
+  const createClerkPasskey = async () => {
+    try {
+      const response = await user?.createPasskey();
+      console.log("response", response);
+    } catch (err) {
+      console.error("error:", JSON.stringify(err, null, 2));
+    }
+  };
+
   return (
     <header className="flex flex-wrap justify-between items-center px-4 py-2">
-      <div>
+      <div className="flex w-full flex-wrap justify-center items-center">
         <Link
           href="/"
           className="text-2xl font-bold text-blue-500 hover:opacity-50 mx-auto sm:mx-0"
@@ -34,15 +44,21 @@ function Header() {
             className="w-full max-w-4xl rounded border bg-gray-100 px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           />
         </Form>
-        <div>
+        <div className="flex items-center space-x-4 mt-4 sm:mt-0 flex-1 sm:flex-none">
           <Link
-            href="/basket"
-            className="sm: relative flex flex-1 items-center justify-center space-x-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 sm:flex-none sm:justify-start"
+            href={"/basket"}
+            className={
+              "sm: relative flex flex-1 items-center justify-center space-x-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 sm:flex-none sm:justify-start"
+            }
           >
-            <TrolleyIcon className="w-6 h-6" />
+            <TrolleyIcon className="h-6 w-6" />
+            <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+              {7}
+            </span>
             <span>My Basket</span>
           </Link>
 
+          {/* User area */}
           <ClerkLoaded>
             <SignedIn>
               <Link
@@ -66,6 +82,7 @@ function Header() {
             )}
             {user?.passkeys.length === 0 && (
               <button
+                onClick={createClerkPasskey}
                 className={
                   "animate-pulse rounded border border-blue-300 bg-white px-4 py-2 font-bold text-blue-500 hover:bg-blue-700 hover:text-white"
                 }
