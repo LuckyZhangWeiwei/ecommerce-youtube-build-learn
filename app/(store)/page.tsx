@@ -5,9 +5,9 @@ import { getAllProducts } from "@/sanity/lib/products/getAllProducts";
 export default async function Home() {
   const products = await getAllProducts();
   const categories = await getAllCategories();
+
   return (
     <div>
-      <div>hello world</div>
       <div className="flex min-h-screen flex-col items-center justify-start bg-gray-100 p-4">
         <ProductsView products={products} categories={categories} />
       </div>
