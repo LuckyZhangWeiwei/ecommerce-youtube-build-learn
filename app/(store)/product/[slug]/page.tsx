@@ -3,12 +3,47 @@ import { getProductBySlug } from "@/sanity/lib/products/getProductBySlug";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { PortableText } from "next-sanity";
+import urlBuilder from "@sanity/image-url";
+import { getImageDimensions, SanityImageSource } from "@sanity/asset-utils";
+
+const SampleImageComponent = ({
+  value,
+  isInline,
+}: {
+  value: SanityImageSource & { alt?: string };
+  isInline: boolean;
+}) => {
+  const { width, height } = getImageDimensions(value);
+  const dataset = process.env.SANITY_STUDIO_DATASET!;
+  const projectId = process.env.SANITY_STUDIO_PROJECT_ID!;
+
+  return (
+    <img
+      src={urlBuilder({ dataset, projectId })
+        .image(value)
+        .width(isInline ? 100 : 800)
+        .fit("max")
+        .auto("format")
+        .url()}
+      alt={value.alt || " "}
+      loading="lazy"
+      style={{
+        display: isInline ? "inline-block" : "block",
+        aspectRatio: width / height,
+      }}
+    />
+  );
+};
+
+const components = {
+  types: {
+    image: SampleImageComponent,
+  },
+};
 
 async function page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-
-  console.log(product.description);
 
   if (!product) {
     return notFound();
@@ -44,7 +79,10 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
             </div>
             <div className="prose mb-6 max-w-none">
               {Array.isArray(product.description) && (
-                <PortableText value={product.description} />
+                <PortableText
+                  value={product.description}
+                  components={components}
+                />
               )}
             </div>
           </div>
