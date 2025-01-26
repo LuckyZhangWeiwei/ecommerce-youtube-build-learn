@@ -5,6 +5,7 @@ import Image from "next/image";
 import { PortableText } from "next-sanity";
 import urlBuilder from "@sanity/image-url";
 import { getImageDimensions, SanityImageSource } from "@sanity/asset-utils";
+import AddtoBasketButton from "@/components/AddtoBasketButton";
 
 const SampleImageComponent = ({
   value,
@@ -86,9 +87,9 @@ async function page({ params }: { params: Promise<{ slug: string }> }) {
               )}
             </div>
           </div>
-          {/* <div className="mt-6">
+          <div className="mt-6">
             <AddtoBasketButton product={product} disabled={isOutOfStock} />
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

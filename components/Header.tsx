@@ -11,9 +11,14 @@ import Link from "next/link";
 import React from "react";
 import Form from "next/form";
 import { PackageIcon, TrolleyIcon } from "@sanity/icons";
+import { useBasketStore } from "@/app/(store)/store";
 
 function Header() {
   const { user } = useUser();
+
+  const itemCount = useBasketStore((state) =>
+    state.items.reduce((total, item) => total + item.quantity, 0)
+  );
 
   const createClerkPasskey = async () => {
     try {
@@ -53,7 +58,7 @@ function Header() {
           >
             <TrolleyIcon className="h-6 w-6" />
             <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-              {7}
+              {itemCount}
             </span>
             <span>My Basket</span>
           </Link>
