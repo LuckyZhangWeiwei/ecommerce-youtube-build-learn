@@ -57,9 +57,11 @@ function Header() {
             }
           >
             <TrolleyIcon className="h-6 w-6" />
-            <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-              {itemCount}
-            </span>
+            {itemCount > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {itemCount}
+              </span>
+            )}
             <span>My Basket</span>
           </Link>
 
