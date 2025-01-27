@@ -9,6 +9,13 @@ import AddtoBasketButton from "@/components/AddtoBasketButton";
 import { urlFor } from "@/sanity/lib/image";
 import Loader from "@/components/Loader";
 
+export type MetaData = {
+  orderNumber: string;
+  customName: string;
+  customEmail: string;
+  clerkUserId: string;
+};
+
 function page() {
   const groupedItems = useBasketStore((state) => state.getGroupedItems());
 
@@ -18,11 +25,29 @@ function page() {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // wait client to mount
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const handleCheckout = () => {};
+  const handleCheckout = () => {
+    if (!isSignedIn) return;
+
+    setIsLoading(true);
+
+    try {
+      const metadata: MetaData = {
+        orderNumber: crypto.randomUUID(),
+        customName: user?.fullName ?? "Unknown",
+        customEmail: user?.emailAddresses[0].emailAddress ?? "Unknown",
+        clerkUserId: user!.id,
+      };
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!isClient) {
     return <Loader />;
@@ -48,7 +73,12 @@ function page() {
               className="mb-4 p-4 border rounded flex items-center justify-between"
             >
               <div className="flex min-w-0 flex-1 cursor-pointer items-center">
-                <div className="mr-4 h-20 w-20 flex-hrink-0 sm:h-24 sm:w-24">
+                <div
+                  className="mr-4 h-20 w-20 flex-hrink-0 sm:h-24 sm:w-24"
+                  onClick={() =>
+                    router.push(`/product/${item.product.slug?.current}`)
+                  }
+                >
                   {item.product.image && (
                     <Image
                       src={urlFor(item.product.image).url() || ""}
@@ -59,7 +89,12 @@ function page() {
                     />
                   )}
                 </div>
-                <div className="min-w-0">
+                <div
+                  className="min-w-0"
+                  onClick={() =>
+                    router.push(`/product/${item.product.slug?.current}`)
+                  }
+                >
                   <h2 className="truncate text-lg font-semibold sm:text-xl">
                     {item.product.name}
                   </h2>
