@@ -8,13 +8,10 @@ import Image from "next/image";
 import AddtoBasketButton from "@/components/AddtoBasketButton";
 import { urlFor } from "@/sanity/lib/image";
 import Loader from "@/components/Loader";
-
-export type MetaData = {
-  orderNumber: string;
-  customName: string;
-  customEmail: string;
-  clerkUserId: string;
-};
+import {
+  createCheckoutSession,
+  Metadata,
+} from "@/actions/createCheckoutSession";
 
 function page() {
   const groupedItems = useBasketStore((state) => state.getGroupedItems());
@@ -30,20 +27,24 @@ function page() {
     setIsClient(true);
   }, []);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!isSignedIn) return;
 
     setIsLoading(true);
 
     try {
-      const metadata: MetaData = {
+      const metadata: Metadata = {
         orderNumber: crypto.randomUUID(),
-        customName: user?.fullName ?? "Unknown",
-        customEmail: user?.emailAddresses[0].emailAddress ?? "Unknown",
+        customerName: user?.fullName ?? "Unknown",
+        customerEmail: user?.emailAddresses[0].emailAddress ?? "Unknown",
         clerkUserId: user!.id,
       };
+
+      const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
+
+      if (checkoutUrl) window.location.href = checkoutUrl;
     } catch (error) {
-      console.error(error);
+      console.error("Error creating checkout session", error);
     } finally {
       setIsLoading(false);
     }
