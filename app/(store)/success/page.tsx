@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useBasketStore } from "../store";
 import Link from "next/link";
 
-function page() {
+function Success() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get("orderNumber");
   const clearBasket = useBasketStore((state) => state.clearBasket);
@@ -78,4 +78,4 @@ function page() {
   );
 }
 
-export default page;
+export default Success;

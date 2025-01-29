@@ -13,7 +13,7 @@ import {
   Metadata,
 } from "@/actions/createCheckoutSession";
 
-function page() {
+function Basket() {
   const groupedItems = useBasketStore((state) => state.getGroupedItems());
 
   const { isSignedIn } = useAuth();
@@ -150,4 +150,4 @@ function page() {
   );
 }
 
-export default page;
+export default Basket;

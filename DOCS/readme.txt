@@ -5,3 +5,7 @@ sanity typegen generate
 
 cd stripecli
 ./stripe.exe listen --forward-to localhost:3000/webhook
+
+npm run build && npm run start
+
+npm i -g vercel

@@ -19,7 +19,7 @@ const SampleImageComponent = ({
   const projectId = process.env.SANITY_STUDIO_PROJECT_ID!;
 
   return (
-    <img
+    <Image
       src={urlBuilder({ dataset, projectId })
         .image(value)
         .width(isInline ? 100 : 800)
@@ -41,6 +41,9 @@ const components = {
     image: SampleImageComponent,
   },
 };
+
+export const dynamic = "force-static";
+export const revalidate = 60;
 
 async function page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
